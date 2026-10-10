@@ -1,57 +1,87 @@
-# Starting file for Lab 1 - Chapter 12 - book_catalog.py program
-# Include your name, date, and class in the assignment comments (replace this line)
+# Kyle Dinkins
+# 10OCT2026
+# DEV128 18807
+# LA1: Lab Activity 1 - Book Catalog Program
 
+# Lists all books in the catalog.
+def list_books(book_catalog):
+    for book in book_catalog:
+        print(book)
+
+# Allows the user to access a book in the catalog regardless of capitalization.
+def find_book_key(book_catalog, search_title):
+    for book in book_catalog:
+        if book.lower() == search_title.lower():
+            return book
+    return None
+
+# Gets input from the user and returns information about the corresponding book.
 def show_book(book_catalog):
     title = input("Title: ")
-    if title in book_catalog:
-        book = book_catalog[title]
-        print(f"Title:    {title}")
-        print(f"Author:   {book['author']}")
-        print(f"Pub year: {book['pubyear']}")
+    print()
+    key_match = find_book_key(book_catalog, title)
+    if key_match:
+        book_info = book_catalog[key_match]
+        print(f"Title:    {key_match}")
+        print(f"Author:   {book_info['author']}")
+        print(f"Pub year: {book_info['pubyear']}")
     else:
         print(f"Sorry, {title} doesn't exist in the catalog.")
 
+# Gets input from the user to add new book information to the catalog or edit book information in the catalog.
 def add_edit_book(book_catalog, mode):
     title = input("Title: ")
-    if mode == "add" and title in book_catalog:
+    key_match = find_book_key(book_catalog, title)
+    if mode == "add" and key_match:
         print(f"{title} already exists in the catalog.")
         response = input ("Would you like to edit it? (y/n): ").lower()
         if(response != "y"):
             return
-    elif mode == "edit" and title not in book_catalog:
+        title = key_match
+    elif mode == "edit" and not key_match:
         print(f"{title} doesn't exist in the catalog.")
         response = input("Would you like to add it? (y/n): ").lower()
         if (response != "y"):
             return
+    # Makes sure a new book isn't added to the catalog if capitalization differs.
+    elif mode == "edit" and key_match:
+        title = key_match
 
-    # Get remaining book data and create a dictionary for the data
+    # Gets the remaining book data and creates a dictionary for the data.
+    print()
     author = input("Author name: ")
+    print()
     pubyear = input("Publication year: ")
     book = {title: {"author": author, "pubyear": pubyear}}
 
-    # Add the book data to the catalog using the update operator
+    # Adds the book data to the catalog using the update operator.
     book_catalog |= book
 
+# Gets input from the user and deletes the corresponding book information from the catalog.
 def delete_book(book_catalog):
     title = input("Title: ")
-    if title in book_catalog:
-        del book_catalog[title]
-        print(f"{title} removed from catalog.")
+    key_match = find_book_key(book_catalog, title)
+    if key_match:
+        del book_catalog[key_match]
+        print(f"\n{key_match} removed from catalog.")
     else:
-        print(f"{title} doesn't exist in the catalog.")
+        print(f"\n{title} doesn't exist in the catalog.")
 
+# Displays the command menu.
 def display_menu():
-    print("The Book Catalog program")
-    print()
+    print("\n========================")
     print("COMMAND MENU")
+    print("list - List books")
     print("show - Show book info")
     print("add -  Add book")
     print("edit - Edit book")
     print("del -  Delete book")
     print("exit - Exit program")
+    print("========================")
 
+# Allows the user to choose between multiple commands and continues until the user types "exit".
 def main():
-    display_menu()
+    print("\nThe Book Catalog Program")
     book_catalog = {
         "Moby Dick": 
             {"author" : "Herman Melville",
@@ -64,9 +94,13 @@ def main():
              "pubyear" : "1969"}
         }
     while True:
+        display_menu()
         print()
         command = input("Command: ").lower()
-        if command == "show":
+        print()
+        if command == "list":
+            list_books(book_catalog)
+        elif command == "show":
             show_book(book_catalog)
         elif command == "add":
             add_edit_book(book_catalog, mode="add")
@@ -75,7 +109,7 @@ def main():
         elif command == "del":
             delete_book(book_catalog)
         elif command == "exit":
-            print("Bye!")
+            print("Thank you for using Book Catalog Program, goodbye!\n")
             break
         else:
             print("Unknown command. Please try again.")
