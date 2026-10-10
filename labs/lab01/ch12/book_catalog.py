@@ -6,7 +6,10 @@
 # Lists all books in the catalog.
 def list_books(book_catalog):
     for book in book_catalog:
-        print(book)
+        print(f"Title:    {book}")
+        print(f"Author:   {book_catalog[book]['author']}")
+        print(f"Pub year: {book_catalog[book]['pubyear']}")
+        print()
 
 # Allows the user to access a book in the catalog regardless of capitalization.
 def find_book_key(book_catalog, search_title):
@@ -25,8 +28,10 @@ def show_book(book_catalog):
         print(f"Title:    {key_match}")
         print(f"Author:   {book_info['author']}")
         print(f"Pub year: {book_info['pubyear']}")
+        print()
     else:
         print(f"Sorry, {title} doesn't exist in the catalog.")
+        print()
 
 # Gets input from the user to add new book information to the catalog or edit book information in the catalog.
 def add_edit_book(book_catalog, mode):
@@ -39,7 +44,7 @@ def add_edit_book(book_catalog, mode):
             return
         title = key_match
     elif mode == "edit" and not key_match:
-        print(f"{title} doesn't exist in the catalog.")
+        print(f"\n{title} doesn't exist in the catalog.\n")
         response = input("Would you like to add it? (y/n): ").lower()
         if (response != "y"):
             return
@@ -52,6 +57,7 @@ def add_edit_book(book_catalog, mode):
     author = input("Author name: ")
     print()
     pubyear = input("Publication year: ")
+    print()
     book = {title: {"author": author, "pubyear": pubyear}}
 
     # Adds the book data to the catalog using the update operator.
@@ -63,13 +69,13 @@ def delete_book(book_catalog):
     key_match = find_book_key(book_catalog, title)
     if key_match:
         del book_catalog[key_match]
-        print(f"\n{key_match} removed from catalog.")
+        print(f"\n{key_match} removed from catalog.\n")
     else:
-        print(f"\n{title} doesn't exist in the catalog.")
+        print(f"\n{title} doesn't exist in the catalog.\n")
 
 # Displays the command menu.
 def display_menu():
-    print("\n========================")
+    print("========================")
     print("COMMAND MENU")
     print("list - List books")
     print("show - Show book info")
@@ -112,7 +118,7 @@ def main():
             print("Thank you for using Book Catalog Program, goodbye!\n")
             break
         else:
-            print("Unknown command. Please try again.")
+            print("Unknown command. Please try again.\n")
 
 if __name__ == "__main__":
     main()
